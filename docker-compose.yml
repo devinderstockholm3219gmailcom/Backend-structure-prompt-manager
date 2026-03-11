@@ -1,0 +1,43 @@
+
+
+# Docker Compose configuration
+version: '3.8'
+
+# Define services
+services:
+
+  # ── Your Bun Backend ────────────────────────────────────────
+  api:
+    build: .                        # build from our Dockerfile
+    container_name: ai-prompt-api
+    ports:
+      - "3000:3000"                 # host:container
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env                        # load all secrets from .env
+    depends_on:
+      mongo:
+        condition: service_healthy  # wait until MongoDB is ready
+    restart: unless-stopped
+
+  # ── MongoDB (local, for Docker only) ────────────────────────
+  # Note: your .env already points to MongoDB Atlas (cloud)
+  # This local mongo is available if you want to switch to local
+  mongo:
+    image: mongo:7-jammy
+    container_name: ai-prompt-mongo
+    ports:
+      - "27017:27017"               # expose for local tools (Compass)
+    volumes:
+      - mongo_data:/data/db         # persist data between restarts
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s                 # check every 10 seconds
+      timeout: 5s                   # give up after 5 seconds
+      retries: 5                    # try 5 times before marking unhealthy
+
+# ── Named volumes ────────────────────────────────────────────
+# Docker manages this folder — data survives container restarts
+volumes:
+  mongo_data:

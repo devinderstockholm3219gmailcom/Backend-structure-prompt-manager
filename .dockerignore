@@ -1,0 +1,13 @@
+node_modules
+bun.lockb
+.env
+/tests
+
+.git
+.gitignore
+
+*.log
+
+dist 
+
+PROGRESS.md
