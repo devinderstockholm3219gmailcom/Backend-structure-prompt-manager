@@ -1,0 +1,28 @@
+# Render Blueprint — one-click deploy of the backend API.
+# https://render.com/docs/blueprint-spec
+#
+# The database is NOT provisioned here (Render doesn't host MongoDB).
+# Create a free MongoDB Atlas cluster and paste its connection string into
+# DATABASE_URL when Render prompts you (it's marked sync:false below).
+services:
+  - type: web
+    name: ai-prompt-manager-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      # Render injects PORT automatically; the app reads it from env.
+      - key: DATABASE_URL
+        sync: false        # ← paste your MongoDB Atlas URI at deploy time
+      - key: FRONTEND_URL
+        sync: false        # ← your deployed frontend origin (for CORS)
+      - key: JWT_SECRET
+        generateValue: true  # Render generates a strong random secret
+      - key: JWT_REFRESH_SECRET
+        generateValue: true

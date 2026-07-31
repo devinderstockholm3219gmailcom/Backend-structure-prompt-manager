@@ -1,5 +1,10 @@
 # Prompt Manager
 
+[![CI](https://github.com/devinder-dev/ai-prompt-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/devinder-dev/ai-prompt-manager/actions/workflows/ci.yml)
+![Bun](https://img.shields.io/badge/Bun-1.x-black?logo=bun)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+
 A full-stack AI prompt management application. Organize, store, and manage your AI prompts in collections with a clean and intuitive interface.
 
 ## Tech Stack
@@ -97,3 +102,20 @@ docker run -p 3000:3000 --env-file .env prompt-manager-backend
 | POST   | `/api/collections`        | Create a collection      | Yes  |
 | DELETE | `/api/collections/:id`    | Delete a collection      | Yes  |
 | GET    | `/health`                 | Health check             | No   |
+
+## Deploy
+
+The backend ships with a [Render Blueprint](render.yaml) for one-click deployment (Dockerfile-based).
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/devinder-dev/ai-prompt-manager)
+
+**Steps:**
+1. Create a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster and copy its connection string.
+2. Click **Deploy to Render** above (or push this repo and choose *New → Blueprint* in Render).
+3. When prompted, set the two `sync:false` env vars:
+   - `DATABASE_URL` → your Atlas connection string
+   - `FRONTEND_URL` → your deployed frontend origin (for CORS)
+   - `JWT_SECRET` and `JWT_REFRESH_SECRET` are generated automatically by Render.
+4. After the service is live, seed an admin user by running `bun run src/scripts/seed-admin.ts` with `ADMIN_PASSWORD` set (see `.env.example`).
+
+> Render injects `PORT` automatically; the app binds to it via `env.PORT`. Health checks hit `/health`.

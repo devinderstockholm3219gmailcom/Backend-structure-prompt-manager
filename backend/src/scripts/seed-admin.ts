@@ -30,7 +30,7 @@ async function seedAdmin(): Promise<void> {
 
   // Hash password manually — pre-save hook doesn't run on findOneAndUpdate
   const salt           = await bcrypt.genSalt(10)
-  const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, salt)
+  const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD!, salt) // guaranteed non-null by the guard above
 
   const admin = await UserModel.findOneAndUpdate(
     { email: ADMIN_EMAIL },
