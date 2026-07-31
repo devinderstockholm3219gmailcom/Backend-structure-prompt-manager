@@ -35,7 +35,7 @@ const authenticate = async (request: FastifyRequest, reply: FastifyReply) => {
   }
 
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET) as IJwtPayload;
+    const decoded = jwt.verify(token, env.JWT_SECRET, { algorithms: ['HS256'] }) as IJwtPayload;
     request.userId = decoded.userId;
   } catch {
     return reply.status(401).send({

@@ -1,9 +1,11 @@
 import { UserModel } from '../models/User.ts';
 import type { IUser } from '../types/user.types.ts';
 
-// Find a user by email
+// Find a user by email.
+// password is `select: false` on the schema, so request it explicitly here —
+// login needs it for bcrypt.compare().
 export const findByEmail = async (email: string): Promise<IUser | null> => {
-  return UserModel.findOne({ email });
+  return UserModel.findOne({ email }).select('+password');
 };
 
 // Find a user by ID

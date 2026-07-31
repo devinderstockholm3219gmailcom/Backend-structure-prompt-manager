@@ -88,7 +88,7 @@ export const login = async (data: {
 // Refresh access token
 export const refresh = async (refreshToken: string): Promise<ITokens> => {
   try {
-    const decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as IJwtPayload;
+    const decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET, { algorithms: ['HS256'] }) as IJwtPayload;
 
     // Check if user still exists
     const user = await authRepo.findById(decoded.userId);

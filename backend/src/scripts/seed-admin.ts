@@ -10,9 +10,16 @@ config()
 
 import { UserModel } from '../models/User.ts'
 
-const ADMIN_EMAIL    = 'admin@aipromptmanager.com'
-const ADMIN_USERNAME = 'admin'
-const ADMIN_PASSWORD = 'ChangeMe123!'
+// Admin credentials come from the environment — never hardcode them.
+// Set ADMIN_PASSWORD (and optionally ADMIN_EMAIL / ADMIN_USERNAME) in your .env.
+const ADMIN_EMAIL    = process.env.ADMIN_EMAIL    ?? 'admin@aipromptmanager.com'
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME ?? 'admin'
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+
+if (!ADMIN_PASSWORD || ADMIN_PASSWORD.length < 8) {
+  console.error('❌ ADMIN_PASSWORD env var is required (minimum 8 characters). Aborting seed.')
+  process.exit(1)
+}
 
 async function seedAdmin(): Promise<void> {
   console.log('🌱 Connecting to MongoDB...')
